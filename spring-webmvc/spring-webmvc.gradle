@@ -1,5 +1,5 @@
 description = "Spring Web MVC"
-
+//将jar包安装到maven本地仓库
 apply plugin: 'maven' // 引入maven插件
 apply plugin: 'maven-publish'
 group = 'org.springframework' // 会按照group生成.m2下的目录路径
