@@ -2,6 +2,32 @@ description = "Spring Beans"
 
 apply plugin: "groovy"
 
+apply plugin: 'maven' // 引入maven插件
+apply plugin: 'maven-publish'
+group = 'org.springframework' // 会按照group生成.m2下的目录路径
+version = '5.1.2-DEBUG' // 指定版本
+
+repositories {
+	mavenLocal() // 使用本地仓库
+	//mavenCentral()
+}
+
+def localMavenRepo = 'file://' + new File('D:\\2017081301_Java_software\\maven_repo\\repo').absolutePath
+// 上传Task，Gradle会生成并上传pom.xml文件。
+uploadArchives{
+	repositories{
+		mavenDeployer{
+			repository(url:localMavenRepo)
+
+			//构造项目的Pom文件
+			pom.project{
+				name=project.name
+				packaging='jar'
+				description='description' }
+		}
+
+	}
+}
 dependencies {
 	compile(project(":spring-core"))
 	optional("javax.inject:javax.inject:1")
