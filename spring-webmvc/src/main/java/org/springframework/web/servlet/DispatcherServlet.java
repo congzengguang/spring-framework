@@ -292,7 +292,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 	}
 
-	/** Detect all HandlerMappings or just expect "handlerMapping" bean?. */
+	/** 检测所有HandlerMappings or 只是期待“handlerMapping” bean?. */
 	private boolean detectAllHandlerMappings = true;
 
 	/** Detect all HandlerAdapters or just expect "handlerAdapter" bean?. */
@@ -902,17 +902,17 @@ public class DispatcherServlet extends FrameworkServlet {
 
 
 	/**
-	 * Exposes the DispatcherServlet-specific request attributes and delegates to {@link #doDispatch}
-	 * for the actual dispatching.
+	 * 公开DispatcherServlet特定的请求属性和委托 {@link #doDispatch}
+	 * 用于实际调度。
 	 */
 	@Override
 	protected void doService(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logRequest(request);
 
-		// Keep a snapshot of the request attributes in case of an include,
-		// to be able to restore the original attributes after the include.
+		// 在包含的情况下保留请求属性的快照,
+		// 能够在包含之后恢复原始属性.
 		Map<String, Object> attributesSnapshot = null;
-		if (WebUtils.isIncludeRequest(request)) {
+		if (WebUtils.isIncludeRequest(request)) {  //不包含属性“javax.servlet.include.request_uri”
 			attributesSnapshot = new HashMap<>();
 			Enumeration<?> attrNames = request.getAttributeNames();
 			while (attrNames.hasMoreElements()) {
@@ -985,20 +985,18 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
-	 * Process the actual dispatching to the handler.
-	 * <p>The handler will be obtained by applying the servlet's HandlerMappings in order.
-	 * The HandlerAdapter will be obtained by querying the servlet's installed HandlerAdapters
-	 * to find the first that supports the handler class.
-	 * <p>All HTTP methods are handled by this method. It's up to HandlerAdapters or handlers
-	 * themselves to decide which methods are acceptable.
-	 * @param request current HTTP request
-	 * @param response current HTTP response
-	 * @throws Exception in case of any kind of processing failure
+	 * 处理实际调度到处理程序.
+	 * <p>处理程序将通过按顺序应用servlet的HandlerMappings来获得.
+	 * 将通过查询servlet安装的HandlerAdapter来获取HandlerAdapter，以找到支持处理程序类的第一个。
+	 * <p>所有HTTP方法都由此方法处理. 由HandlerAdapters或处理程序自行决定哪些方法可以接受。
+	 * @param request 当前的HTTP请求
+	 * @param response 当前的HTTP响应
+	 * @throws Exception 在任何处理失败的情况下
 	 */
 	protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpServletRequest processedRequest = request;
 		HandlerExecutionChain mappedHandler = null;
-		boolean multipartRequestParsed = false;
+		boolean multipartRequestParsed = false; //是否包含文件上传的请求
 
 		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
 
@@ -1153,10 +1151,10 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
-	 * Convert the request into a multipart request, and make multipart resolver available.
-	 * <p>If no multipart resolver is set, simply use the existing request.
-	 * @param request current HTTP request
-	 * @return the processed request (multipart wrapper if necessary)
+	 * 将请求转换为多部分请求, 并使多部分解析器可用.
+	 * <p>如果没有设置多部分解析器, 只需使用现有的请求.
+	 * @param request 当前的HTTP请求
+	 * @return 已处理的请求（必要时包含多部分包装）
 	 * @see MultipartResolver#resolveMultipart
 	 */
 	protected HttpServletRequest checkMultipart(HttpServletRequest request) throws MultipartException {
@@ -1219,8 +1217,8 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
-	 * Return the HandlerExecutionChain for this request.
-	 * <p>Tries all handler mappings in order.
+	 * 返回此请求的HandlerExecutionChain。
+	 * <p>按顺序尝试所有处理程序映射.
 	 * @param request current HTTP request
 	 * @return the HandlerExecutionChain, or {@code null} if no handler could be found
 	 */
@@ -1238,7 +1236,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
-	 * No handler found -> set appropriate HTTP response status.
+	 * 找不到处理程序 ->设置适当的HTTP响应状态。
 	 * @param request current HTTP request
 	 * @param response current HTTP response
 	 * @throws Exception if preparing the response failed

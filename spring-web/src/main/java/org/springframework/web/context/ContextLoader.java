@@ -135,9 +135,12 @@ public class ContextLoader {
 	private static final Properties defaultStrategies;
 
 	static {
-		// Load default strategy implementations from properties file.
-		// This is currently strictly internal and not meant to be customized
-		// by application developers.
+		// 从属性文件加载默认策略实现.
+		//从当前web包之中加载配置文件ContextLoader.properties  ，其中是下面的一个key-value
+		/*
+		* org.springframework.web.context.WebApplicationContext=org.springframework.web.context.support.XmlWebApplicationContext
+		* */
+		// 这当前是严格内部的，不应由应用程序开发人员定制.
 		try {
 			ClassPathResource resource = new ClassPathResource(DEFAULT_STRATEGIES_PATH, ContextLoader.class);
 			defaultStrategies = PropertiesLoaderUtils.loadProperties(resource);

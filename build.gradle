@@ -233,14 +233,14 @@ configure(subprojects - project(":spring-build-src")) { subproject ->
 		// Don't include or exclude anything explicitly by default. See SPR-12085.
 	}
 
-	task javadocJar(type: Jar) {
-		classifier = "javadoc"
-		from javadoc
-	}
+//	task javadocJar(type: Jar) {
+//		classifier = "javadoc"
+//		from javadoc
+//	}
 
 	artifacts {
 		archives sourcesJar
-		archives javadocJar
+		//archives javadocJar
 	}
 }
 
