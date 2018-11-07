@@ -161,7 +161,7 @@ import org.springframework.web.util.WebUtils;
 @SuppressWarnings("serial")
 public class DispatcherServlet extends FrameworkServlet {
 
-	/** Well-known name for the MultipartResolver object in the bean factory for this namespace. */
+	/** 此命名空间的Bean工厂中的MultipartResolver对象的已知名称。 */
 	public static final String MULTIPART_RESOLVER_BEAN_NAME = "multipartResolver";
 
 	/** Well-known name for the LocaleResolver object in the bean factory for this namespace. */
@@ -917,7 +917,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			Enumeration<?> attrNames = request.getAttributeNames();
 			while (attrNames.hasMoreElements()) {
 				String attrName = (String) attrNames.nextElement();
-				if (this.cleanupAfterInclude || attrName.startsWith(DEFAULT_STRATEGIES_PREFIX)) {
+				if (this.cleanupAfterInclude || attrName.startsWith(DEFAULT_STRATEGIES_PREFIX)) { // DEFAULT_STRATEGIES_PREFIX = org.springframework.web.servlet
 					attributesSnapshot.put(attrName, request.getAttribute(attrName));
 				}
 			}
@@ -951,21 +951,35 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 	}
 
+	/**
+	 * 打印请求日志
+	 * @param request
+	 */
 	private void logRequest(HttpServletRequest request) {
+		/**
+		 * public static void traceDebug(Log logger, Function<Boolean, String> messageFactory)
+		 * 打印debug轨迹传递Function对象，将一个对象转换成另一对象
+		 */
 		LogFormatUtils.traceDebug(logger, traceOn -> {
-			String params;
+			String params; //声明一个字符串params
+			/**
+			 * 如果打开打印详细日志。
+			 * 则首先将参数格式化成 key:[value],key2:[value],key3:[value]的格式
+			 */
 			if (isEnableLoggingRequestDetails()) {
 				params = request.getParameterMap().entrySet().stream()
 						.map(entry -> entry.getKey() + ":" + Arrays.toString(entry.getValue()))
 						.collect(Collectors.joining(", "));
 			}
 			else {
+				//如果没有参数的话，则设置成""
 				params = (request.getParameterMap().isEmpty() ? "" :  "masked");
 			}
-
+			//如果get方式的请求字符串也为空的话，则"" ,否则就是查询字符串的查询参数
 			String query = StringUtils.isEmpty(request.getQueryString()) ? "" : "?" + request.getQueryString();
 			String dispatchType = (!request.getDispatcherType().equals(DispatcherType.REQUEST) ?
 					"\"" + request.getDispatcherType().name() + "\" dispatch for " : "");
+			//拼凑需要打印的完整请求的信息
 			String message = (dispatchType + request.getMethod() + " \"" + getRequestUri(request) +
 					query + "\", parameters={" + params + "}");
 
@@ -1008,17 +1022,17 @@ public class DispatcherServlet extends FrameworkServlet {
 				processedRequest = checkMultipart(request);
 				multipartRequestParsed = (processedRequest != request);
 
-				// Determine handler for the current request.
+				// 确定当前请求的处理程序。
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
 					noHandlerFound(processedRequest, response);
 					return;
 				}
 
-				// Determine handler adapter for the current request.
+				// 确定当前请求的处理程序适配器。
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
-				// Process last-modified header, if supported by the handler.
+				// 处理最后修改的标头，如果处理程序支持。
 				String method = request.getMethod();
 				boolean isGet = "GET".equals(method);
 				if (isGet || "HEAD".equals(method)) {
@@ -1032,7 +1046,7 @@ public class DispatcherServlet extends FrameworkServlet {
 					return;
 				}
 
-				// Actually invoke the handler.
+				// 实际上调用处理程序。 handlerAdapter 处理请求
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
 				if (asyncManager.isConcurrentHandlingStarted()) {
@@ -1258,6 +1272,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * 返回此处理程序对象的HandlerAdapter.
 	 * @param handler 用于查找适配器的处理程序对象
 	 * @throws ServletException 如果没有为处理程序找到HandlerAdapter. 这是一个致命的错误。
+	 * @return 返回一个RequestMappingHandlerAdapter适配器
 	 */
 	protected HandlerAdapter getHandlerAdapter(Object handler) throws ServletException {
 		if (this.handlerAdapters != null) {
@@ -1425,14 +1440,13 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
-	 * Restore the request attributes after an include.
+	 * 在包含之后恢复请求属性.
 	 * @param request current HTTP request
-	 * @param attributesSnapshot the snapshot of the request attributes before the include
+	 * @param attributesSnapshot 包含之前的请求属性的快照
 	 */
 	@SuppressWarnings("unchecked")
 	private void restoreAttributesAfterInclude(HttpServletRequest request, Map<?,?> attributesSnapshot) {
-		// Need to copy into separate Collection here, to avoid side effects
-		// on the Enumeration when removing attributes.
+		// 需要在这里复制到单独的集合中,删除属性时避免对枚举产生副作用。
 		Set<String> attrsToCheck = new HashSet<>();
 		Enumeration<?> attrNames = request.getAttributeNames();
 		while (attrNames.hasMoreElements()) {

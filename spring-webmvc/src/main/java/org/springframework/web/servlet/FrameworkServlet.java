@@ -484,8 +484,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
-	 * Whether logging of potentially sensitive, request details at DEBUG and
-	 * TRACE level is allowed.
+	 * 是否允许在DEBUG和TRACE级别记录可能敏感的请求详细信息。
 	 * @since 5.1
 	 */
 	public boolean isEnableLoggingRequestDetails() {
